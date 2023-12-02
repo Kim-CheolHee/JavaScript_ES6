@@ -9,12 +9,12 @@
     {name: '바지', price: 25000}
   ];
   
-  const addProduct = (a, b) => a + b
+  const add = (a, b) => a + b
 
-  log(reduce(addProduct, map(p => p.price, filter(p => p.price < 20000, products))))
+  log(reduce(add, map(p => p.price, filter(p => p.price < 20000, products))))
   log(
     reduce(
-      addProduct,
+      add,
       filter(n => n >= 20000,
         map(p => p.price, products))))
 </script>
@@ -25,12 +25,19 @@
 
 <script>
   const go = (...args) => reduce((a, f) => f(a), args)
+  const pipe = (f, ...fs) => (...as) => go(f(...as), ...fs)
 
   go(
-    0,
-    a => a + 1,
+    add(0, 1),
     a => a + 10,
     a => a + 100,
     log
   )
+
+  const f = pipe(
+    (a, b) => a + b,
+    a => a + 10,
+    a => a + 100
+  )
+  log(f(0, 1))
 </script>
