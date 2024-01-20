@@ -7,7 +7,7 @@
         let i = -1
         let res = []
         while (++i < l) {
-            fx.log(i, 'range')
+            // fx.log(i, 'range')
             res.push(i)
         }
         return res
@@ -15,28 +15,33 @@
     
     var list = range(4)
     fx.log(list)
-    // fx.log(fx.reduce(add, list))
-</script>
+    fx.log(fx.reduce(add, list))
 
-## 느긋한 L.range
-<script type="module">
-    import * as fx from '../fx.js'
-    const add2 = (a, b) => a + b
+// 느긋한 L.range
     
     const L = {}
     L.range = function *(l) {
         let i = -1
         while (++i < l) {
-            fx.log(i, 'L.range')
+            // fx.log(i, 'L.range')
             yield i
         }
     }
-
+    
     var list = L.range(4)
     fx.log(list)
-    fx.log(list.next())
-    fx.log(list.next())
-    fx.log(list.next())
-    fx.log(list.next())
-    // fx.log(fx.reduce(add2, list))
+    // fx.log(list.next())
+    // fx.log(list.next())
+    // fx.log(list.next())
+    // fx.log(list.next())
+    fx.log(fx.reduce(add, list))
+
+    function test (name, time, f) {
+        console.time(name)
+        while (time--) f ()
+        console.timeEnd(name)
+    }
+
+    test('range', 10, () => fx.reduce(add, range(1000000)))
+    test('L.range', 10, () => fx.reduce(add, L.range(1000000)))
 </script>
