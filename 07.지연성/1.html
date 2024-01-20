@@ -17,7 +17,7 @@
     fx.log(list)
     fx.log(fx.reduce(add, list))
 
-// 느긋한 L.range
+    // 느긋한 L.range
     
     const L = {}
     L.range = function *(l) {
@@ -44,4 +44,34 @@
 
     test('range', 10, () => fx.reduce(add, range(1000000)))
     test('L.range', 10, () => fx.reduce(add, L.range(1000000)))
+    console.clear()
+
+    // take
+    const take = fx.curry((l, iter) => {
+        let res = []
+        for (const a of iter) {
+            res.push(a)
+            if (res.length == l) return res
+        }
+        return res
+    })
+    console.time('')
+    fx.log(take(5, range(100)))
+    fx.go(
+        range(10000),
+        take(5),
+        fx.reduce(add),
+        fx.log
+        )
+        console.timeEnd('')
+        
+        console.time('')
+        fx.log(take(5, L.range(100)))
+        fx.go(
+            L.range(10000),
+            take(5),
+            fx.reduce(add),
+        fx.log
+    )
+    console.timeEnd('')
 </script>
