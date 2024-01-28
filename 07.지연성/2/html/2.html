@@ -125,12 +125,13 @@
       }
     }
   })
-
+  console.time('L')
   go(L.range(10),
     L.map(n => n + 10),
     L.filter(n => n % 2),
     take(2),
     log)
+  console.timeEnd('L')
 </script>
 
 ### map, filter 계열 함수들이 가지는 결합 법칙
@@ -144,3 +145,42 @@
  [[mapping, filtering, mapping], [mapping, filtering, mapping]]
 
  ## 결과를 만드는 함수 reduce, take
+
+### reduce
+
+<script>
+  L.entries = function *(obj) {
+    for (const k in obj) {
+      yield [k, obj[k]]
+    }
+  }
+
+  const join = curry((sep = ',', iter) => 
+    reduce((a, b) => `${a}${sep}${b}`, iter))
+
+  const queryStr = pipe(
+    // Object.entries,
+    L.entries,
+    L.map(([k, v]) => `${k}=${v}`),
+    // function (a) {
+      // console.log(a)
+      // return a
+    // },
+    join('&')
+  )
+  log(queryStr({ limit:10, offset: 10, type: 'notice' }))
+
+  function *a () {
+    yield 10
+    yield 11
+    yield 12
+    yield 13
+  }
+  log(join(' - ', a()))
+</script> 
+
+### take, find
+
+<script>
+
+</script>
