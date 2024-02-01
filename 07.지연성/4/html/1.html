@@ -7,17 +7,39 @@
 
     const isIterable = a => a && a[Symbol.iterator]
 
+    // L.flatten = function *(iter) {
+    //     for (const a of iter) {
+    //         if (isIterable(a)) {
+    //             for (const b of a) {
+    //                 yield b
+    //             }
+    //         } else {
+    //             yield a
+    //         }
+    //     }
+    // }
+    // yield 제네레이터 적용
     L.flatten = function *(iter) {
         for (const a of iter) {
             if (isIterable(a)) {
-                for (const b of a) {
-                    yield b
-                }
+                yield *a
             } else {
                 yield a
             }
         }
     }
+
+    // 깊은 Iterable 모두 펼치기
+    L.deepFlat = function *f(iter) {
+        for (const a of iter) {
+            if (isIterable(a)) {
+                yield *f(a)
+            } else {
+                yield a
+            }
+        }
+    }
+    log('L.deepFlat', [...L.deepFlat([1, [2, [3, 4], [[5]]]])])
 
     var it = L.flatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]])
     // log([...it])
@@ -28,10 +50,10 @@
     // log(it.next())
     // log(it.next())
     // log(it.next())
-    log(take(6, L.flatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]])))
+    log('take', take(6, L.flatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]])))
 
     const flatten = pipe(L.flatten, takeAll)
-    log(flatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]]))
+    log('flatten', flatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]]))
 </script>
 
 ## L.flatMap
