@@ -46,7 +46,8 @@
     // log(go2(go2(n2, add5), log))
 </script>
 
-## Composition
+## Composition (모나드, Monad)
+- 프로미스는 모나드의 일종임.
 
 <script type="module">
     // f . g
@@ -69,5 +70,31 @@
 ## Kleisli Composition
 
 <script>
+    // f. g
+    // f(g(x)) = f(g(x))
+    // f(g(x)) = g(x)
+    
+    var users = [
+        { id: 1, name: 'aa' },
+        { id: 2, name: 'bb' },
+        { id: 3, name: 'cc' }
+    ]
 
+    const getUserById = id =>
+        find(u => u.id == id, users) || Promise.reject('없어요!')
+
+    const f1 = ({ name }) => name
+    const g1 = getUserById
+    // const fg = id => f1(g1(id))
+    // log(fg(2))
+    
+    // const r = fg(2)
+    // log(fg(3))
+    // users.pop()
+    // users.pop()
+    // log(users)
+    // log(fg(3))
+    
+    const fg = id => Promise.resolve(id).then(g1).then(f1)
+    fg(2).then(log)
 </script>
