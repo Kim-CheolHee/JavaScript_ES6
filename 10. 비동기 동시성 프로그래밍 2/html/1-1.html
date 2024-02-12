@@ -45,7 +45,7 @@
 
 ## Kleisli Composition - L.filter, filter, nop, take
 <script>
-    go(
+/*     go(
         [1, 2, 3, 4, 5, 6],
         L.map(a => Promise.resolve(a * a)),
         L.filter(a => Promise.resolve(a % 2)),
@@ -67,16 +67,26 @@
         // }),
         take(4),
         log
-    )
+    ) */
 </script>
 
 ## reduce에서 nop 지원
 <script>
     go(
-        [1, 2, 3, 4],
-        L.map(a => Promise.resolve(a * a)),
-        L.filter(a => Promise.resolve(a % 2)),
-        reduce(add),
+        [1, 2, 3, 4, 5, 6, 7, 8],
+        // L.map(a => Promise.resolve(a * a)),
+        L.map(a => {
+            log(a)
+            return new Promise(resolve => setTimeout(() => resolve(a * a), 1000))
+        }),
+        // L.filter(a => Promise.resolve(a % 2)),
+        L.filter(a => {
+            log(a)
+            return new Promise(resolve => setTimeout(() => resolve(a % a), 1000))
+        }),
+        // reduce(add),
+        take(2),
+        // takeAll,
         log
     )
 </script>
