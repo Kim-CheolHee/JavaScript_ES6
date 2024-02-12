@@ -1,0 +1,16 @@
+<script src="../lib/fx.js"></script>
+
+## go, pipe, reduce에서 비동기 제어
+
+<script>
+    go(
+        Promise.resolve(1),
+        a => a + 10,
+        // a => Promise.resolve(a + 100),
+        a => Promise.resolve('error~~'),
+        a => log('--------'),
+        a => a + 100,
+        a => a + 1000,
+        log
+    ).catch(a => log(a))
+</script>
