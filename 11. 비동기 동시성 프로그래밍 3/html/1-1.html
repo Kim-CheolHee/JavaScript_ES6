@@ -1,0 +1,37 @@
+<script src="../lib/fx.js"></script>
+
+## async/await
+<script>
+    function delay (time) {
+        return new Promise(resolve => setTimeout(() => resolve(), time))
+    }
+
+    async function delayIdentity (a) {
+        await delay(1000)
+        return a
+    }
+    // Promise가 리턴되야 await 가능
+    async function f1 () {
+        // const a = delayIdentity(10)
+        const a = await delayIdentity(10)
+        const b = await delayIdentity(5)
+        // const a = 10
+        // const b = 5
+        // log(a + b)
+        return a + b
+    }
+
+    // const pa = Promise.resolve(10)
+    const pa = f1()
+
+    (async () => {
+        log(await pa)
+    }) ()
+    // f1()
+    // log(f1())
+    // f1().then(log)
+    // go(f1(), log)
+    /* (async () => {
+        log(await f1())
+    }) () */
+</script>
