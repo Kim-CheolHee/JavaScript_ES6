@@ -1,7 +1,7 @@
 <script src="../lib/fx.js"></script>
 
 ## async/await
-<script>
+<!-- <script>
     function delay (time) {
         return new Promise(resolve => setTimeout(() => resolve(), time))
     }
@@ -34,4 +34,80 @@
     /* (async () => {
         log(await f1())
     }) () */
+</script> -->
+
+## QnA. Array.prototype.map이 있는데 왜 FxJS의 map 함수가 필요한지?
+  - 기존 map은 비동기 상황을 제어하지 않음(promise를 제어하지 않음)
+<script>
+    async function delayI (a) {
+        return new Promise(resolve => setTimeout(() => resolve(a), 100))
+    }
+
+/*     async function f2 () {
+        const list = [1, 2, 3, 4]
+        const temp = list.map(async a => await delayI(a * a))
+        // log(temp)
+        // log(res.reduce(add))
+        const res = await temp
+        // log(res)
+    }
+    f2()
+
+    async function f3 () {
+        const list = [1, 2, 3, 4]
+        const temp = map(a => delayI(a * a), list)
+        // log(temp)
+        const res = await temp
+        // log(res)
+    }
+    f3()
+
+    function f4 () {
+        return map(a => delayI(a * a), [1, 2, 3, 4])
+    }
+    // f4()
+    // log(f4())
+    // f4().then(log)
+    (async () => {
+        log(await f4())
+    }) () */
+</script>
+
+## QnA. 이제 비동기는 async/await으로 제어할 수 있는데 왜 파이프라인이 필요한지?
+  - 안전하게 비동기 상황을 끝까지 잘 연결하거나, 동기 or 비동기 상황에 상관없이 함수 합성을 안전하게 하기 위함.
+  - async/await는 문장으로 다루기 위함.
+<script>
+    const list = [1, 2, 3, 4, 5, 6, 7, 8]
+    function f5 (list) {
+        return go(
+            list,
+            L.map(a => delayI(a * a)), // [1, 4, 9, 16, 25, 36, 49, 64]
+            L.filter(a => delayI(a % 2)), // [1, 9, 25, 49]
+            L.map(a => delayI(a + 1)), // [2, 10, 26, 50]
+            take(2), // [2, 10, 26]
+            reduce((a, b) => delayI(a + b)) // 2 + 10 + 26 = 38
+        )
+    }
+    // go(f5(list), a => log(a, 'f5'))
+    
+    async function f6 (list) {
+        let temp = []
+        for (const a of list) {
+            const b = await delayI(a * a)
+            if (await delayI(b % 2)) {
+                const c = await delayI(b + 1)
+                temp.push(c)
+                if (temp.length == 2) {
+                    break
+                }
+            }
+        }
+        let res = temp[0], i = 0
+        while (++i < temp.length) {
+            res = await delayI(res + temp[i])
+        }
+        return res
+    }
+    go(f6(list), a => log(a, 'f6'))
+    go(f5(list), a => log(a, 'f5'))
 </script>
