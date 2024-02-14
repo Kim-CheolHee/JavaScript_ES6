@@ -78,7 +78,7 @@
   - async/await는 문장으로 다루기 위함.
 <script>
     const list = [1, 2, 3, 4, 5, 6, 7, 8]
-    function f5 (list) {
+/*     function f5 (list) {
         return go(
             list,
             L.map(a => delayI(a * a)), // [1, 4, 9, 16, 25, 36, 49, 64]
@@ -109,5 +109,29 @@
         return res
     }
     go(f6(list), a => log(a, 'f6'))
-    go(f5(list), a => log(a, 'f5'))
+    go(f5(list), a => log(a, 'f5')) */
+</script>
+
+## QnA. async:await와 파이프라인을 같이 사용하기도 하나요?
+<script>
+    async function f52 (list) {
+        const r1 = await go(
+                            list,
+                            L.map(a => delayI(a * a)),
+                            L.filter(a => delayI(a % 2)),
+                            L.map(a => delayI(a + 1)),
+                            take(2),
+                            reduce((a, b) => delayI(a + b))
+                        )
+
+        const r2 = await go(
+                            list,
+                            L.map(a => delayI(a * a)),
+                            L.filter(a => delayI(a % 2)),
+                            reduce((a, b) => delayI(a + b))
+                        )
+        const r3 = await delayI(r1 + r2)
+        return r3 + 10
+    }
+    go(f52(list), a => log(a, 'f52'))
 </script>
